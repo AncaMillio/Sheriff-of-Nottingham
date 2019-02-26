@@ -1,0 +1,44 @@
+In afara claselor deja existente in schelet(GameInput si Main), am creat inca trei clase: Bunuri, Player si Game.
+
+Clasa Bunuri contine    -campurile: id, asset(denumirea bunului), type(legal sau ilegal), profit, penalty, bonus(provenit de la produsele ilegale).
+                        -metodele: * setter si getter pentru bonus, deoarece acest camp este private;
+                                   * constructorul "Bunuri(...)" in care se aloca valori campurilor prin intermediul unui switch care depinde de id;
+
+Clasa Player contine    -campurile: role(serif sau comerciant), sherriff(initializat cu 0 pt comerciant, ia valoarea 1 cand jucatorul devine serif),
+                                    visterie(initializata cu 50 la inceputul jocului), cards(cartile din mana), sack(cartile din sac), taraba(cartile de pe taraba),
+                                    strategy, mita(valoarea mitei sau 0 daca jucatorul nu da mita), declaration(declararea bunurilor din sac),
+                                    points(stocarea scorului jucatorului), greedyRound(contor pt rundele in care greedy are rol de comerciant, pt a sti daca
+                                    adauga in sac si un bun ilegal), mere, paine, pui, branza(contoare pentru a sti cate bunuri legale din fiecare tip are
+                                    jucatorul pe taraba, la etapa de stabilire a regelui si reginei).
+                        -metodele: * constructorul "Player" pentru alocarea strategiei;
+                                   * "assetFreq(...)" returneaza o lista cu tipurile de bunuri care au frecventa cea mai mare printre cartile din mana jucatorului,
+                                    metoda folosita in setarea sacului.Mai exact, se creeaza cate o lista pt fiecare tip de bun legal, dupa care se adauga toate bunurile de un
+                                   anumit tip in lista corespunzatoare. Se compara dimensiunile listelor si se adauga in lista "elemMax" cate un bun din listele care au
+                                   dimensiune maxima;
+                                   * "metodaBasic()" seteaza sacul pt strategia basic si este apelata din metoda "setSack" pt a evita codul duplicat;
+                                   * "setSack()" seteaza sacul jucatorului in functie de strategie printr-un switch;
+                                   * "checkSack(...)" veifica sacul jucatorului curent(confisca bunuri nedeclarate si le adauga la sfarsitul pachetului,
+                                    se platesc penalizarile-seriful ii plateste comerciantului daca acesta a spus adevarul sau comerciantul ii plateste serifului
+                                    daca a avut bunuri nedeclarate);
+
+Clasa Game urmareste
+etapele jocului
+propriu-zis, continand  -campurile: players(lista cu ordinea strategiilor de tip String, care va fi transpusa in lista cu obiecte de tip Player, "playersArray"),
+                                    pachet(lista cu cartile de tip Integer, care va fi transpusa in lista cu obiecte de tip Bunuri, "pachetBun"), playersArray si pachetBun.
+                        -metodele: * setter pt "players";
+                                   * setter pt "pachet";
+                                   * constructorul "Game(...)" realizeaza alocarea de memorie si initializarea campurilor players si pachet;
+                                   * "pachetBunuri()" realizeaza transpunerea din "pachet" in "pachetBun", metionata mai sus;
+                                   * "alocStrategy()" realizeaza transpunerea din "players" in "playersArray", mentionata mai sus;
+                                   * "alocCards()" aloca din pachet cate 6 carti sau completeqaza pana la 6 din pachet cartile din mana jucatorilor;
+                                   * "setSack()" apeleaza functia de setare a sacului din clasa Player, doar pentru jcatorii cu rol de comerciant;
+                                   * "setSheriff(...)" stabileste seriful pentru runda urmatoare in functie de numarul acesteia;
+                                   * "inspection()" face verificarea sacilor comerciantilor in functie de conditiile impuse de strategia serifului din runda curenta;
+                                   * "mutarePeTaraba()" scoate bunurile din sacul jucatorului si le pune in lista "taraba" a acestuia;
+                                   * "kingAndQueen()" adauga in visterie bonusurile pentru statutul de King sau Queen al fiecarui jucator;
+                                   * "bonusIllegal()" adauga pe taraba jucatorului bunurile legale pe care acesta le primeste ca bonus petru bunurile ilegale pe care
+                                    le-a adus pe taraba sa;
+                                   * clasa interna "PointsComparator" implementeaza interfata "Comparator" si contine metoda "compare" prin care compara campurile
+                                    "points" ale jucatorilor;
+                                   * "scor()" calculeaza scorul final al jucatorilor si creeaza lista "rezultat" in care incarca aceste scoruri, apoi o sorteaza
+                                    descrescator cu ajutorul comparatorului "PointsComparator()", prin metoda "Collections.sort(...)". In final afiseaza rezultatele;
